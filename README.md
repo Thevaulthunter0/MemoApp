@@ -23,3 +23,13 @@
 <p>The basic of the model should look like this, but modificaiton can and will be done in the future.</p>
 <p>V.1.00</p>
 <img src="https://github.com/user-attachments/assets/c3ffa6bc-9ec9-4d7f-a331-bf0a278b76b6" alt="bd diagram">
+
+<h2>Important Documentation</h2>
+
+- ASP.NET CORE https://learn.microsoft.com/en-us/aspnet/core/?view=aspnetcore-8.0
+
+- Bootstrap https://getbootstrap.com/docs/5.3/getting-started/introduction/
+
+- MicrosoftSql https://learn.microsoft.com/en-us/sql/?view=sql-server-ver16
+
+- EntityFrameWork https://learn.microsoft.com/en-us/ef/

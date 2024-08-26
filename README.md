@@ -20,6 +20,6 @@
 <p>I created a service layer so that the controllers dont directly called the DB.</p>
 
 <h2>Model</h2>
-<pThe basic of the model should look like this, but modificaiton can and will be done in the future.></p>
+<p>The basic of the model should look like this, but modificaiton can and will be done in the future.</p>
 <p>V.1.00</p>
 <img src="https://github.com/user-attachments/assets/c3ffa6bc-9ec9-4d7f-a331-bf0a278b76b6" alt="bd diagram">

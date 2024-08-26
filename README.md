@@ -24,7 +24,7 @@
 <p>V.1.00</p>
 <img src="https://github.com/user-attachments/assets/c3ffa6bc-9ec9-4d7f-a331-bf0a278b76b6" alt="bd diagram">
 
-<h2>Important Documentation</h2>
+<h2>Documentation</h2>
 
 - ASP.NET CORE https://learn.microsoft.com/en-us/aspnet/core/?view=aspnetcore-8.0
 
@@ -33,3 +33,15 @@
 - MicrosoftSql https://learn.microsoft.com/en-us/sql/?view=sql-server-ver16
 
 - EntityFrameWork https://learn.microsoft.com/en-us/ef/
+
+<h2>Migration commands</h2>
+
+<code>dotnet ef migrations add MigrationName</code>
+
+<code>dotnet ef database update</code>
+
+<code>dotnet ef migrations remove</code>
+
+<code>dotnet ef migrations list<</code>
+
+

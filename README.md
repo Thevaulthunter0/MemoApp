@@ -19,7 +19,7 @@
 <p>EntityFramework connect to your BD using a connectionString and base on the model that you assign inside of the DbContext, it will create a migration that can be easily upload to your database when modification need to be done. Its basicly drop the whole db and remake it with the modification that you have done.</p>
 <p>I created a service layer so that the controllers dont directly called the DB.</p>
 
-<h2>DataBase</h2>
+<h2>Model</h2>
 <pThe basic of the model should look like this, but modificaiton can and will be done in the future.></p>
 <p>V.1.00</p>
 <img src="https://github.com/user-attachments/assets/c3ffa6bc-9ec9-4d7f-a331-bf0a278b76b6" alt="bd diagram">

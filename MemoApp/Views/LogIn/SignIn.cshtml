@@ -1,0 +1,27 @@
+﻿@using MemoApp.Models.Dto;
+
+@model UserAuthentificationDto
+
+@{
+    ViewData["Title"] = "SignIn";
+}
+<h2>Sign In!</h2>
+<form asp-action="SignIn" method="post">
+    <div>
+        <label asp-for = "UserName"></label>
+        <input asp-for = "UserName"/>
+        <span asp-validation-for= "UserName" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password"/>
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div>
+        <input type="submit" value="Sign in" class="btn btn-primary" />
+    </div>
+    @if (Model != null)
+    {
+        <p class="text-danger">Please try again!</p>
+    }
+</form>

@@ -10,15 +10,15 @@ namespace MemoApp.Models.Object
         public string? UserName { get; set; }
         public string? Password { get; set; }
 
-        public static async Task<int?> Authenticate(List<User> users, UserAuthentificationDto model)
+        public async static Task<int?> Authenticate(List<User> users, UserAuthentificationDto model)
         {
-            // Check if the model is null or invalid
+            // Check if the model is null
             if (model == null )
             {
                 return null;
             }
 
-            // Find the user that matches the provided credentials
+            // Find the user that matches
             var user = users.FirstOrDefault(u => u.UserName == model.UserName && u.Password == model.Password);
 
             // If user is found, return the user's ID

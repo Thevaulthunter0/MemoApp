@@ -1,7 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center"> 
+    <h1>Welcome to </h1>
+    <img src="~/Ressource/Logo_Home_index-removebg-preview.png" alt="Logo" class="img-fluid" />
+    <h3>Click on the button bellow to log in and see what others have to say!</h3>
+    <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("SignIn", "LogIn")'"><h1>Log In!</h1></button>
 </div>

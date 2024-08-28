@@ -1,0 +1,39 @@
+﻿@using MemoApp.Models.Dto;
+@model List<FullMemoDto>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Desciption</th>
+            <th scope="col">Creation date</th>
+            <th scope="col">Created by</th>
+            <th scope="col">Modification date</th>
+            <th scope="col">Modified date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach(var memo in Model)
+            {
+                <tr>
+                    <th scope="row">@memo.MemoId</th>
+                    <th scope="row">@memo.Name</th>
+                    <th scope="row">@memo.Description</th>
+                    <th scope="row">@memo.CreationDate</th>
+                    <th scope="row">@memo.CreatedBy</th>
+                    @if(@memo.ModificationDate == null)
+                    {
+                        <th scope="row">NA</th>
+                        <th scope="row">NA</th>
+                    }
+                    else{
+                    <th scope="row">@memo.ModificationDate</th>
+                    <th scope="row">@memo.ModifiedBy</th>
+                    }
+                    <th scope="row">@memo.ModifiedBy</th>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

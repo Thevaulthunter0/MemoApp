@@ -1,0 +1,13 @@
+﻿@using MemoApp.Models.Dto;
+@model List<FullMemoDto>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Welcome moderator!</h1>
+
+<div>
+    @Html.Partial("~/Views/Memo/AllMemoList.cshtml", Model)
+</div>

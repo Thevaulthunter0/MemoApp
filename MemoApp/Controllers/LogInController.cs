@@ -34,10 +34,14 @@ namespace MemoApp.Controllers
         {
             var users = await DbService.GetUsers();
             int? userId = await MemoApp.Models.Object.User.Authenticate(users, model);
-            if(userId != null)
+            if(userId != null && userId != 0)
             {
-                return RedirectToAction("Home", "Index", userId)
+                return RedirectToAction("Index", "Home", userId)
 ;           }
+            if(userId == 0)
+            {
+                return RedirectToAction("Index", "Moderator");
+            }
             else { return View(model); }
         }
     }

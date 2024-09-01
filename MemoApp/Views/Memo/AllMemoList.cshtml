@@ -1,8 +1,10 @@
 ﻿@using MemoApp.Models.Dto;
-@model List<FullMemoDto>
+@model List<FullListMemoDto>
 <table class="table">
     <thead class="thead-dark">
         <tr>
+            <th scope="col"></th>
+            <th scope="col"></th>
             <th scope="col">Id</th>
             <th scope="col">Name</th>
             <th scope="col">Desciption</th>
@@ -17,6 +19,20 @@
             foreach(var memo in Model)
             {
                 <tr>
+                    <th>
+                        <a class="icon-link" onclick="location.href='@Url.Action("Detail", "Memo", new {IdMemo = @memo.MemoId })'" href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder" viewBox="0 0 16 16">
+                                <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139q.323-.119.684-.12h5.396z" />
+                            </svg>
+                        </a>
+                    </th>
+                    <th>
+                        <a class="icon-link" onclick="#" href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
+                            </svg>
+                        </a>
+                    </th>
                     <th scope="row">@memo.MemoId</th>
                     <th scope="row">@memo.Name</th>
                     <th scope="row">@memo.Description</th>
@@ -37,3 +53,4 @@
         }
     </tbody>
 </table>
+<button type="button" class="btn-primary" onclick="">Add</button>

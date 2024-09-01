@@ -1,0 +1,72 @@
+﻿@using MemoApp.Models.Dto;
+@model DetailMemoDto;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="card">
+        <div class="card-header ">
+            <h3>Detail</h3>
+        </div>
+        <div class="card-body">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col">
+                        <strong>ID</strong>
+                        <p>@Model.MemoId</p>
+                    </div>
+                    <div class="col">
+                        <strong>Name</strong>
+                        <p>@Model.Name</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <strong>Description</strong>
+                        <p>@Model.Description</p>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <strong>Creation date</strong>
+                        <p>@Model.CreationDate</p>
+                    </div>
+                    <div class="col">
+                        <strong>Created by</strong>
+                        <p>@Model.CreatedBy</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <strong>Modification date</strong>
+                        @{
+                            if (Model.ModificationDate == null)
+                            {
+                                <p>N.A</p>
+                            }
+                            else
+                            {
+                                <p>@Model.ModificationDate</p>
+                            }
+                        }
+                    </div>
+                    <div class="col">
+                        <strong>Modified by</strong>
+                        @{
+                            if(Model.ModifiedBy == null)
+                            {
+                                <p>N.A</p>
+                            }
+                            else
+                            {
+                                <p>@Model.ModifiedBy</p>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

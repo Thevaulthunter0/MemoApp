@@ -1,0 +1,12 @@
+﻿@using MemoApp.Models.Dto;
+@model EmployeeHomePageDto;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Welcome back @Model.Name</h1>
+
+<p>@Model.MemosAssigned.Count()</p>
+
+<p>@Model.MemosCreated.Count()</p>

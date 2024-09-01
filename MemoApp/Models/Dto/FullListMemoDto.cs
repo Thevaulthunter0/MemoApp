@@ -1,6 +1,6 @@
 ﻿namespace MemoApp.Models.Dto
 {
-    public class FullMemoDto
+    public class FullListMemoDto
     {
         public int MemoId { get; set; }
         public string? Name { get; set; }

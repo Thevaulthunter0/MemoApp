@@ -36,7 +36,7 @@ namespace MemoApp.Controllers
             int? userId = await MemoApp.Models.Object.User.Authenticate(users, model);
             if(userId != null && userId != 0)
             {
-                return RedirectToAction("Index", "Home", userId)
+                return RedirectToAction("Index", "Employee", userId)
 ;           }
             if(userId == 0)
             {

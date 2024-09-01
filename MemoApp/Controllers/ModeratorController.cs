@@ -18,10 +18,10 @@ namespace MemoApp.Controllers
             //Fetch the data
             var DbMemo = DbService.getMemos();
             //Transfor the data into the Dto
-            List<FullMemoDto> MemosDto = new List<FullMemoDto>();
+            List<FullListMemoDto> MemosDto = new List<FullListMemoDto>();
             foreach (var mem in await DbMemo)
             {
-                FullMemoDto memo = new FullMemoDto();
+                FullListMemoDto memo = new FullListMemoDto();
                 {
                     memo.MemoId = mem.MemoId;
                     memo.Name = mem.Name;

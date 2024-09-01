@@ -27,16 +27,64 @@ namespace MemoApp
             return await DbContext.Memos.ToListAsync();
         }
 
+        public async Task<Memo> getDetailMemo(int IdMemo)
+        {
+            var memo = DbContext.Memos.FirstOrDefaultAsync(u => u.MemoId == IdMemo);
+            if(memo == null)
+            {
+                return null;
+            }
+            else
+            {
+                return await memo;
+            }            
+        }
+
+        public async Task<List<Memo>> getMemoAssigned(int IdMemo)
+        {
+            var MemoAssigned = await DbContext.MemoEmployees.Where(me => me.MemoId == IdMemo)
+                .Join(DbContext.Memos, me => me.MemoId, m => m.MemoId, (me,m) => m)
+                .ToListAsync();
+            return MemoAssigned;
+        }
+
+        public async Task<List<Memo>> getMemoCreated(string CreatorName)
+        {
+            var MemoCreated = await DbContext.Memos.Where(m => m.CreatedBy == CreatorName).ToListAsync();
+            return MemoCreated;
+        }
+
         //JOB//
         public async Task<List<Job>> getJobs()
         {
             return await DbContext.Jobs.ToListAsync();
         }
 
+        public async Task<List<Job>> getJobOfEmployee(int IdEmployee)
+        {
+            var JobOfEmployee = await DbContext.EmployeeJobs.Where(ej => ej.EmployeeId == IdEmployee)
+                .Join(DbContext.Jobs, ej => ej.JobId , j => j.JobId , (ej,j) => j)
+                .ToListAsync();
+            return JobOfEmployee;
+        }
+
         //EMPLOYEE//
         public async Task<List<Employee>> getEmployees()
         {
             return await DbContext.Employees.ToListAsync();
+        }
+
+        public async Task<Employee> getEmployee(int IdEmployee)
+        {
+            var employee = DbContext.Employees.FirstOrDefaultAsync(E => E.EmployeeId == IdEmployee);
+            if (employee == null) 
+            {
+                return null;
+            }
+            else
+            {
+                return await employee;
+            }
         }
 
         //EMPLOYEEJOB//

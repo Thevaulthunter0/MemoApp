@@ -13,7 +13,7 @@ namespace MemoApp.Controllers
             DbService = dbContext;
         }
 
-        public IActionResult Index(int IdEmployee)
+        public async Task<IActionResult> Index(int IdEmployee)
         {
             var employee = DbService.getEmployee(IdEmployee).Result;
             EmployeeHomePageDto EmployeeData = new EmployeeHomePageDto()
@@ -21,7 +21,7 @@ namespace MemoApp.Controllers
                 Name = employee.Name,
                 Jobs = DbService.getJobOfEmployee(IdEmployee).Result,
                 MemosAssigned = DbService.getMemoAssigned(IdEmployee).Result,
-                MemosCreated = DbService.getMemoCreated(employee.Name).Result,
+                MemosCreatedCount = DbService.getMemoCreatedCount(employee.Name).Result,
             };
             var model = EmployeeData;
             return View(model);

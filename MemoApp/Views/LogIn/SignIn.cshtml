@@ -7,16 +7,17 @@
 }
 <h2>Sign In!</h2>
 <form asp-action="SignIn" method="post">
-    <div>
+    <div class="row">
         <label asp-for = "UserName"></label>
         <input asp-for = "UserName"/>
         <span asp-validation-for= "UserName" class="text-danger"></span>
     </div>
-    <div>
+    <div class="row">
         <label asp-for="Password"></label>
         <input asp-for="Password" type="password"/>
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
+    <br />
     <div>
         <input type="submit" value="Sign in" class="btn btn-primary" />
     </div>

@@ -10,7 +10,7 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Threading.Tasks;
 
-namespace MemoApp
+namespace MemoApp.Services
 {
     public class DbService
     {
@@ -19,6 +19,11 @@ namespace MemoApp
         public DbService(AppDbContext dbContext)
         {
             DbContext = dbContext;
+        }
+        //GENERAL//
+        public async void SaveChanges()
+        {
+            DbContext.SaveChanges();
         }
 
         //USER//
@@ -36,20 +41,20 @@ namespace MemoApp
         public async Task<Memo> getDetailMemo(int IdMemo)
         {
             var memo = DbContext.Memos.FirstOrDefaultAsync(u => u.MemoId == IdMemo);
-            if(memo == null)
+            if (memo == null)
             {
                 return null;
             }
             else
             {
                 return await memo;
-            }            
+            }
         }
 
         public async Task<List<MemoAssignedDto>> getMemoAssigned(int IdEmployee)
         {
             var MemoAssigned = await DbContext.MemoEmployees.Where(me => me.EmployeeId == IdEmployee)
-                .Join(DbContext.Memos, me => me.MemoId, m => m.MemoId, (me,m) => m)
+                .Join(DbContext.Memos, me => me.MemoId, m => m.MemoId, (me, m) => m)
                 .ToListAsync();
             List<MemoAssignedDto> listDto = new List<MemoAssignedDto>();
             foreach (var memo in MemoAssigned)
@@ -69,9 +74,9 @@ namespace MemoApp
 
         public async Task<List<MemoCreatedCountDto>> getMemoCreatedCount(string CreatorName)
         {
-            var MemoCreated = await DbContext.Memos.Where(m => m.CreatedBy == CreatorName).ToListAsync(); 
+            var MemoCreated = await DbContext.Memos.Where(m => m.CreatedBy == CreatorName).ToListAsync();
             List<MemoCreatedCountDto> listDto = new List<MemoCreatedCountDto>();
-            foreach(var memo in MemoCreated)
+            foreach (var memo in MemoCreated)
             {
                 MemoCreatedCountDto NewMemo = new MemoCreatedCountDto()
                 {
@@ -98,7 +103,7 @@ namespace MemoApp
         public async Task<List<Job>> getJobOfEmployee(int IdEmployee)
         {
             var JobOfEmployee = await DbContext.EmployeeJobs.Where(ej => ej.EmployeeId == IdEmployee)
-                .Join(DbContext.Jobs, ej => ej.JobId , j => j.JobId , (ej,j) => j)
+                .Join(DbContext.Jobs, ej => ej.JobId, j => j.JobId, (ej, j) => j)
                 .ToListAsync();
             return JobOfEmployee;
         }
@@ -112,7 +117,7 @@ namespace MemoApp
         public async Task<Employee> getEmployee(int IdEmployee)
         {
             var employee = DbContext.Employees.FirstOrDefaultAsync(E => E.EmployeeId == IdEmployee);
-            if (employee == null) 
+            if (employee == null)
             {
                 return null;
             }
@@ -147,7 +152,7 @@ namespace MemoApp
         public async Task<bool> verifiedSigned(int IdMemo)
         {
             var memo = await DbContext.MemoEmployees.Where(me => me.MemoId == IdMemo).FirstOrDefaultAsync();
-            if(memo.Signed == true)
+            if (memo.Signed == true)
             {
                 return true;
             }

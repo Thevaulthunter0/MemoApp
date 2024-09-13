@@ -1,5 +1,7 @@
 ﻿using MemoApp.Models;
 using MemoApp.Models.Dto;
+using MemoApp.Models.Object;
+using MemoApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,8 +38,8 @@ namespace MemoApp.Controllers
             int? userId = await MemoApp.Models.Object.User.Authenticate(users, model);
             if(userId != null && userId != 0)
             {
-                return RedirectToAction("Index", "Employee", userId)
-;           }
+                return RedirectToAction("Index", "Employee", new { IdEmployee = userId - 1 });
+            }
             if(userId == 0)
             {
                 return RedirectToAction("Index", "Moderator");

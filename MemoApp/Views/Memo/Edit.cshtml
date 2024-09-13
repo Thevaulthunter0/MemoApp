@@ -1,0 +1,26 @@
+﻿@using MemoApp.Models.Dto;
+@model EditMemoDto;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var employeeId = ViewBag.Employee?.EmployeeId;
+}
+
+
+<h2>Edit memo</h2>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="MemoId" />
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <label asp-for="Description"></label>
+        <input asp-for="Description" />
+    </div>
+    <br />
+    <div>
+        <input type="submit" class="btn btn-primary" value="Edit" />
+        <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Employee", new {IdEmployee = @employeeId})'"><h1>Back</h1></button>
+    </div>
+</form>

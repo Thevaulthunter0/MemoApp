@@ -94,10 +94,27 @@ namespace MemoApp.Services
             return listDto;
         }
 
+        public async Task<Memo> getLastMemo()
+        {
+            var LastMemo = await DbContext.Memos.OrderBy(m => m.MemoId).LastAsync();
+            return LastMemo;
+        }
+
+        public void AddMemo(Memo memo)
+        {
+            DbContext.Memos.Add(memo);
+            SaveChanges();
+        }
+
         //JOB//
         public async Task<List<Job>> getJobs()
         {
             return await DbContext.Jobs.ToListAsync();
+        }
+        
+        public async Task<Job> getJob(int JobId)
+        {
+            return await DbContext.Jobs.FirstOrDefaultAsync(j => j.JobId == JobId);
         }
 
         public async Task<List<Job>> getJobOfEmployee(int IdEmployee)
@@ -133,6 +150,20 @@ namespace MemoApp.Services
             return await DbContext.EmployeeJobs.ToListAsync();
         }
 
+        public async Task<List<int>> getEmployeesIdFromJobId(int JobsId)
+        {
+            List<int> EmployeesId = new List<int>();
+
+            var data = await DbContext.EmployeeJobs.Where(e => e.JobId == JobsId).ToListAsync();
+            foreach(var EmployeeJob in data)
+            {
+                EmployeesId.Add(EmployeeJob.EmployeeId);    
+            }
+            
+            return EmployeesId;
+        }
+
+
         //MEMOEMPLOYEE//
         public async Task<List<MemoEmployee>> getMemoEmployees()
         {
@@ -159,11 +190,31 @@ namespace MemoApp.Services
             else { return false; }
         }
 
+        public void CreateMemoEmployee(int MemoId, int EmployeeId)
+        {
+            MemoEmployee MemoEmployee = new MemoEmployee()
+            {
+                MemoId = MemoId,
+                EmployeeId = EmployeeId
+            };
+            DbContext.MemoEmployees.Add(MemoEmployee);
+        }
+
         //MEMOJOB//
         public async Task<List<MemoJob>> getMemoJobs()
         {
             return await DbContext.MemoJobs.ToListAsync();
         }
 
+        public void CreateMemoJob(int MemoId, int JobId)
+        {
+            MemoJob MemoJob = new MemoJob() {
+                MemoId = MemoId,
+                Memo = getDetailMemo(MemoId).Result,
+                JobId = JobId,
+                Job = getJob(JobId).Result,
+            };
+            DbContext.MemoJobs.Add(MemoJob);
+        }
     }
 }

@@ -1,0 +1,34 @@
+﻿@using MemoApp.Models.Dto
+@using MemoApp.Models.Object
+@model CreateMemoDto
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ListJob =(IEnumerable<Job>) ViewBag.Jobs;
+    var EmployeeId = ViewBag.Employee?.EmployeeId;
+}
+
+<h1>Create</h1>
+<form asp-action="Create" method="post">
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <label asp-for="Description"></label>
+        <input asp-for="Description" />
+    </div>
+    <p>Choose Jobs</p>
+    @{
+        foreach(var job in ListJob)
+        {
+            <input type="checkbox" name="JobsId" value="@job.JobId" />
+            <label>@job.Name</label>
+        }
+    }
+    <br />
+    <div>
+        <input type="submit" class="btn btn-primary" value="Create" />
+        <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Employee", new {IdEmployee = EmployeeId})'"><h1>Back</h1></button>
+    </div>
+</form> 

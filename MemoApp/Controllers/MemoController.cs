@@ -2,7 +2,6 @@
 using MemoApp.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 using MemoApp.Services;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MemoApp.Controllers
 {
@@ -71,6 +70,56 @@ namespace MemoApp.Controllers
             {
                 return View(EditedMemo);
             } 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            ViewBag.Jobs = DbService.getJobs().Result;
+            ViewBag.Employee = UserService.GetActiveEmployee(); 
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateMemoDto CreateMemoDto) 
+        {
+            int LastId = DbService.getLastMemo().Result.MemoId;
+            Memo data = new Memo()
+            {
+                //MemoId = LastId + 1,
+                Name = CreateMemoDto.Name,
+                Description = CreateMemoDto.Description,
+                CreationDate = DateTime.Now,
+                CreatedBy = UserService.GetActiveEmployee().Name,
+                ModificationDate = null,
+                ModifiedBy = null
+            };
+            DbService.AddMemo(data);
+            CreateMemoJob(data.MemoId, CreateMemoDto.JobsId);
+            CreateMemoEmployee(data.MemoId, CreateMemoDto.JobsId);
+            return View();
+        }
+
+        public void CreateMemoJob(int MemoId, List<int> JobsId)
+        {
+            foreach(var Id in JobsId)
+            {
+                DbService.CreateMemoJob(MemoId, Id);
+            }
+            DbService.SaveChanges();
+        }
+
+        public void CreateMemoEmployee(int MemoId, List<int> JobsId)
+        {
+            foreach(var Id in JobsId)
+            {
+                var EmployeesId = DbService.getEmployeesIdFromJobId(Id).Result;
+                foreach(var EmployeeId in EmployeesId)
+                {
+                    DbService.CreateMemoEmployee(MemoId, EmployeeId);
+                }
+                DbService.SaveChanges();
+            }
         }
     }
 }

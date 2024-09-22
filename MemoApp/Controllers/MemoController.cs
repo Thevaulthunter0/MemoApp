@@ -83,6 +83,8 @@ namespace MemoApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateMemoDto CreateMemoDto) 
         {
+            ViewBag.Jobs = DbService.getJobs().Result;
+            ViewBag.Employee = UserService.GetActiveEmployee();
             int LastId = DbService.getLastMemo().Result.MemoId;
             Memo data = new Memo()
             {
@@ -97,7 +99,7 @@ namespace MemoApp.Controllers
             DbService.AddMemo(data);
             CreateMemoJob(data.MemoId, CreateMemoDto.JobsId);
             CreateMemoEmployee(data.MemoId, CreateMemoDto.JobsId);
-            return View();
+            return RedirectToAction("Index", "Employee", new { IdEmployee = UserService.GetActiveEmployeeId() });
         }
 
         public void CreateMemoJob(int MemoId, List<int> JobsId)

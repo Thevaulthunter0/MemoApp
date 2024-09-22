@@ -170,6 +170,11 @@ namespace MemoApp.Services
             return await DbContext.MemoEmployees.ToListAsync();
         }
 
+        public async Task<MemoEmployee> getMemoEmployee(int IdMemo, int IdEmployee)
+        {
+            return await DbContext.MemoEmployees.FirstOrDefaultAsync(mp => mp.MemoId == IdMemo && mp.EmployeeId == IdEmployee);
+        }
+
         public async Task<int> getMemosCount(int IdMemo)
         {
             return await DbContext.MemoEmployees.Where(me => me.MemoId == IdMemo).CountAsync();
@@ -195,7 +200,10 @@ namespace MemoApp.Services
             MemoEmployee MemoEmployee = new MemoEmployee()
             {
                 MemoId = MemoId,
-                EmployeeId = EmployeeId
+                Memo = getDetailMemo(MemoId).Result,
+                EmployeeId = EmployeeId,
+                Employee = getEmployee(EmployeeId).Result,
+                Signed = false
             };
             DbContext.MemoEmployees.Add(MemoEmployee);
         }

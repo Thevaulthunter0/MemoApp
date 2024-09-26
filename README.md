@@ -6,8 +6,6 @@
 
 - Moderator page(CRUD operation on the DB)
 
-- Different listing
-
 - Adding a custom pdf file to the memo
 
 - Creating reports

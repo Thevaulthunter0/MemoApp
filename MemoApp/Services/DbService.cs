@@ -32,6 +32,12 @@ namespace MemoApp.Services
             return await DbContext.Users.ToListAsync();
         }
 
+        public async Task<User> GetUser(int idEmployee)
+        {
+            var employee = await getEmployee(idEmployee);
+            return await DbContext.Users.FirstOrDefaultAsync(u => u.UserId == employee.UserId);
+        }
+
         //MEMO//
         public async Task<List<Memo>> getMemos()
         {
@@ -206,6 +212,13 @@ namespace MemoApp.Services
                 Signed = false
             };
             DbContext.MemoEmployees.Add(MemoEmployee);
+        }
+
+        public void SignMemoEmployee(int? MemoId, int? EmployeeId)
+        {
+            DbContext.MemoEmployees.FirstOrDefaultAsync(m => m.MemoId == MemoId && m.EmployeeId == EmployeeId)
+                .Result.Signed = true;
+            SaveChanges();
         }
 
         //MEMOJOB//

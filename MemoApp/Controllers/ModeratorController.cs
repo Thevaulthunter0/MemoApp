@@ -8,10 +8,12 @@ namespace MemoApp.Controllers
     {
         //Access to the services
         private readonly DbService DbService;
+        private UserService userSerivce;
 
-        public ModeratorController(DbService dbContext)
+        public ModeratorController(DbService dbContext, UserService userSerivce)
         {
             DbService = dbContext;
+            this.userSerivce = userSerivce; 
         }
 
         public async Task<IActionResult> Index()

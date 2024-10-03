@@ -21,9 +21,9 @@ namespace MemoApp.Services
             DbContext = dbContext;
         }
         //GENERAL//
-        public async void SaveChanges()
+        public async Task SaveChanges()
         {
-            DbContext.SaveChanges();
+            await DbContext.SaveChangesAsync();
         }
 
         //USER//
@@ -46,15 +46,7 @@ namespace MemoApp.Services
 
         public async Task<Memo> getDetailMemo(int IdMemo)
         {
-            var memo = DbContext.Memos.FirstOrDefaultAsync(u => u.MemoId == IdMemo);
-            if (memo == null)
-            {
-                return null;
-            }
-            else
-            {
-                return await memo;
-            }
+            return await DbContext.Memos.FirstOrDefaultAsync(u => u.MemoId == IdMemo);
         }
 
         public async Task<List<MemoAssignedDto>> getMemoAssigned(int IdEmployee)
@@ -102,14 +94,12 @@ namespace MemoApp.Services
 
         public async Task<Memo> getLastMemo()
         {
-            var LastMemo = await DbContext.Memos.OrderBy(m => m.MemoId).LastAsync();
-            return LastMemo;
+            return await DbContext.Memos.OrderBy(m => m.MemoId).LastAsync();
         }
 
-        public void AddMemo(Memo memo)
+        public async Task AddMemo(Memo memo)
         {
             DbContext.Memos.Add(memo);
-            SaveChanges();
         }
 
         //JOB//
@@ -139,15 +129,7 @@ namespace MemoApp.Services
 
         public async Task<Employee> getEmployee(int IdEmployee)
         {
-            var employee = DbContext.Employees.FirstOrDefaultAsync(E => E.EmployeeId == IdEmployee);
-            if (employee == null)
-            {
-                return null;
-            }
-            else
-            {
-                return await employee;
-            }
+            return await DbContext.Employees.FirstOrDefaultAsync(E => E.EmployeeId == IdEmployee);
         }
 
         //EMPLOYEEJOB//
@@ -201,24 +183,37 @@ namespace MemoApp.Services
             else { return false; }
         }
 
-        public void CreateMemoEmployee(int MemoId, int EmployeeId)
+        public async Task CreateMemoEmployee(int MemoId, int EmployeeId)
         {
-            MemoEmployee MemoEmployee = new MemoEmployee()
+            if(await DbContext.MemoEmployees.FirstOrDefaultAsync(me => me.MemoId == MemoId && me.EmployeeId == EmployeeId) == null)
             {
-                MemoId = MemoId,
-                Memo = getDetailMemo(MemoId).Result,
-                EmployeeId = EmployeeId,
-                Employee = getEmployee(EmployeeId).Result,
-                Signed = false
-            };
-            DbContext.MemoEmployees.Add(MemoEmployee);
+                Console.WriteLine("************************before construction of memoEmployee**************************");
+                var memo = await getDetailMemo(MemoId);
+                var employee = await getEmployee(EmployeeId);
+                MemoEmployee MemoEmployee = new MemoEmployee()
+                {
+                    MemoId = MemoId,
+                    Memo = memo,
+                    EmployeeId = EmployeeId,
+                    Employee = employee,
+                    Signed = false
+                };
+                Console.WriteLine("************************after construction of memoEmployee**************************");
+                DbContext.MemoEmployees.Add(MemoEmployee);
+                Console.WriteLine("************************after add of memoEmployee**************************");
+                await SaveChanges();
+                Console.WriteLine("************************after save of memoEmployee**************************");
+            }
         }
 
-        public void SignMemoEmployee(int? MemoId, int? EmployeeId)
+        public async Task SignMemoEmployee(int? MemoId, int? EmployeeId)
         {
-            DbContext.MemoEmployees.FirstOrDefaultAsync(m => m.MemoId == MemoId && m.EmployeeId == EmployeeId)
-                .Result.Signed = true;
-            SaveChanges();
+            var memoEmployee = await DbContext.MemoEmployees.FirstOrDefaultAsync(m => m.MemoId == MemoId && m.EmployeeId == EmployeeId);
+            if(memoEmployee != null)
+            {
+                memoEmployee.Signed = true;
+            }
+            await SaveChanges();
         }
 
         //MEMOJOB//
@@ -227,15 +222,19 @@ namespace MemoApp.Services
             return await DbContext.MemoJobs.ToListAsync();
         }
 
-        public void CreateMemoJob(int MemoId, int JobId)
+        public async Task CreateMemoJob(int MemoId, int JobId)
         {
+            var memo = await getDetailMemo(MemoId);
+            var job = await getJob(JobId);
             MemoJob MemoJob = new MemoJob() {
                 MemoId = MemoId,
-                Memo = getDetailMemo(MemoId).Result,
+                Memo = memo,
                 JobId = JobId,
-                Job = getJob(JobId).Result,
+                Job = job,
             };
             DbContext.MemoJobs.Add(MemoJob);
+
+            await SaveChanges();
         }
     }
 }

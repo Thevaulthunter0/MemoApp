@@ -9,7 +9,7 @@
 }
 
 <h1>Create</h1>
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
     <div>
         <label asp-for="Name"></label>
         <input asp-for="Name" />
@@ -27,6 +27,11 @@
         }
     }
     <br />
+    <div>
+        <label>Fichier</label>
+        <input type="file" name="file" class="form-control"/>
+    </div>
+    <br/>
     <div>
         <input type="submit" class="btn btn-primary" value="Create" />
         <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Employee", new {IdEmployee = EmployeeId})'"><h1>Back</h1></button>

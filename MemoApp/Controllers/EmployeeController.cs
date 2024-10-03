@@ -18,7 +18,7 @@ namespace MemoApp.Controllers
 
         public async Task<IActionResult> Index(int IdEmployee)
         {
-            var employee = DbService.getEmployee(IdEmployee).Result;
+            var employee  = DbService.getEmployee(IdEmployee).Result;
             UserService.SetActiveEmployee(employee);
             EmployeeHomePageDto EmployeeData = new EmployeeHomePageDto()
             {

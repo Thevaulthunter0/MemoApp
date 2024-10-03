@@ -2,6 +2,7 @@
 using MemoApp.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 using MemoApp.Services;
+using System.Drawing.Printing;
 
 namespace MemoApp.Controllers
 {
@@ -20,17 +21,17 @@ namespace MemoApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Detail(int IdMemo)
         {
-            var memo = DbService.getDetailMemo(IdMemo);
+            var memo = await DbService.getDetailMemo(IdMemo);
             ViewBag.Employee = UserService.GetActiveEmployee(); 
             DetailMemoDto memoDto = new DetailMemoDto()
             {
-                MemoId = memo.Result.MemoId,
-                Name = memo.Result.Name,
-                Description = memo.Result.Description,
-                CreationDate = memo.Result.CreationDate,
-                CreatedBy = memo.Result.CreatedBy,
-                ModificationDate = memo.Result.ModificationDate,
-                ModifiedBy = memo.Result.ModifiedBy,
+                MemoId = memo.MemoId,
+                Name = memo.Name,
+                Description = memo.Description,
+                CreationDate = memo.CreationDate,
+                CreatedBy = memo.CreatedBy,
+                ModificationDate = memo.ModificationDate,
+                ModifiedBy = memo.ModifiedBy,
             };
             var model = memoDto;
             return View(model);
@@ -39,7 +40,7 @@ namespace MemoApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int IdMemo)
         {
-            var memo = DbService.getDetailMemo(IdMemo).Result;
+            var memo = await DbService.getDetailMemo(IdMemo);
             ViewBag.Employee = UserService.GetActiveEmployee();
             EditMemoDto Dto = new EditMemoDto()
             {
@@ -55,7 +56,7 @@ namespace MemoApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditMemoDto EditedMemo)
         {
-            var data = DbService.getDetailMemo(EditedMemo.MemoId).Result;
+            var data = await DbService.getDetailMemo(EditedMemo.MemoId);
             
             if(data != null)
             {
@@ -63,7 +64,7 @@ namespace MemoApp.Controllers
                 data.Description = EditedMemo.Description;
                 data.ModificationDate = DateTime.Now;
                 data.ModifiedBy = UserService.GetActiveEmployee().Name;
-                DbService.SaveChanges();
+                await DbService.SaveChanges();
                 return RedirectToAction("Index", "Employee", new { IdEmployee = UserService.GetActiveEmployeeId()});
             }
             else
@@ -75,17 +76,18 @@ namespace MemoApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Jobs = DbService.getJobs().Result;
+            ViewBag.Jobs =  await DbService.getJobs();
             ViewBag.Employee = UserService.GetActiveEmployee(); 
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateMemoDto CreateMemoDto) 
+        public async Task<IActionResult> Create(CreateMemoDto CreateMemoDto, IFormFile file) 
         {
-            ViewBag.Jobs = DbService.getJobs().Result;
+            ViewBag.Jobs = await DbService.getJobs();
             ViewBag.Employee = UserService.GetActiveEmployee();
-            int LastId = DbService.getLastMemo().Result.MemoId;
+            var lastMemo = await DbService.getLastMemo();
+            int LastId = lastMemo.MemoId;
             Memo data = new Memo()
             {
                 //MemoId = LastId + 1,
@@ -96,31 +98,75 @@ namespace MemoApp.Controllers
                 ModificationDate = null,
                 ModifiedBy = null
             };
-            DbService.AddMemo(data);
-            CreateMemoJob(data.MemoId, CreateMemoDto.JobsId);
-            CreateMemoEmployee(data.MemoId, CreateMemoDto.JobsId);
-            return RedirectToAction("Index", "Employee", new { IdEmployee = UserService.GetActiveEmployeeId() });
-        }
+            await DbService.AddMemo(data);
 
-        public void CreateMemoJob(int MemoId, List<int> JobsId)
-        {
-            foreach(var Id in JobsId)
+            await DbService.SaveChanges();
+
+            await CreateMemoJob(data.MemoId, CreateMemoDto.JobsId);
+
+            if (file != null && file.ContentType == "application/pdf")
             {
-                DbService.CreateMemoJob(MemoId, Id);
+                await UploadFile(file, data.Name, CreateMemoDto.JobsId);
+                return RedirectToAction("Index", "Employee", new { IdEmployee = UserService.GetActiveEmployeeId() });
             }
-            DbService.SaveChanges();
+
+            return View(CreateMemoDto);
         }
 
-        public void CreateMemoEmployee(int MemoId, List<int> JobsId)
+        public async Task CreateMemoJob(int MemoId, List<int> JobsId)
         {
+            Console.WriteLine("******************Before MemoJobs creation**************************");
             foreach(var Id in JobsId)
             {
-                var EmployeesId = DbService.getEmployeesIdFromJobId(Id).Result;
+                await DbService.CreateMemoJob(MemoId, Id);
+            }
+            Console.WriteLine("*******************MemosJobs Created***************************");
+            await DbService.SaveChanges();
+            Console.WriteLine("************************MemoJobs save**************************");
+            await CreateMemoEmployee(MemoId, JobsId);
+        }
+
+        public async Task CreateMemoEmployee(int MemoId, List<int> JobsId)
+        {
+            Console.WriteLine("************************before MemoEmploye creation**************************");
+            foreach (var Id in JobsId)
+            {
+                var EmployeesId = await DbService.getEmployeesIdFromJobId(Id);
                 foreach(var EmployeeId in EmployeesId)
                 {
-                    DbService.CreateMemoEmployee(MemoId, EmployeeId);
+                    await DbService.CreateMemoEmployee(MemoId, EmployeeId);
                 }
-                DbService.SaveChanges();
+            }
+            Console.WriteLine("************************after MemoEmploye creation**************************");
+            await DbService.SaveChanges();
+            Console.WriteLine("************************after MemoEmploye save**************************");
+
+        }
+
+        public async Task UploadFile(IFormFile file, string NameMemo, List<int> JobId)
+        {
+            string MainDirectory = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot", "UploadedFile");
+            //If main directory doesnt exist create it
+            if(!Directory.Exists(MainDirectory))
+            {
+                Directory.CreateDirectory(MainDirectory);
+            }
+            //If the directory for each jobId doesnt exist create it
+            //Change the name of the file for the memo name and add the file in each directory.
+            foreach (var id in JobId)
+            {
+                string JobDirectory = Path.Combine(MainDirectory, id.ToString());
+                if(!Directory.Exists(JobDirectory))
+                {
+                    Directory.CreateDirectory(JobDirectory);
+                }
+                var FilePath = Path.Combine(JobDirectory, NameMemo);
+                //Upload it via stream
+                using (FileStream stream = new FileStream(FilePath, FileMode.Create))
+                {
+                   
+                    await file.CopyToAsync(stream);
+                }
             }
         }
     }
